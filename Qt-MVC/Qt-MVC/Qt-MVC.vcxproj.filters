@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="QtMVC.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="FirstPageModel.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="FirstPageController.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="FirstPageView.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="QtMVC.h" />
+    <QtMoc Include="FirstPageView.h">
+      <Filter>View</Filter>
+    </QtMoc>
+    <QtMoc Include="FirstPageController.h">
+      <Filter>Controller</Filter>
+    </QtMoc>
+    <QtMoc Include="FirstPageModel.h">
+      <Filter>Model</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="QtMVC.qrc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Singleton.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Controller">
+      <UniqueIdentifier>{a41c2468-392a-4ba2-a661-a6e6d92d1ea4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="View">
+      <UniqueIdentifier>{d4438995-b12b-474e-bc98-f82904ca6c9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{9b100821-886f-423a-863a-39bf71a8e7eb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
