@@ -1,0 +1,37 @@
+20210324
+1.支持image的crop，需要设置图片宽高和pitch
+2.支持video更多的参数设置(ColorRange/ColorSpace/ColorPrimaries/ColorTransfer)
+3.支持视频解码成单帧裸数据和序列帧
+4.支持bmp(1bit/4bit/8bit/16bit)数据的解码和转换
+5.支持视频到视频以及编码序列帧和单帧图片到视频的旋转和翻转
+6.支持拖拽打开多个文件和单个文件夹，支持右键打开文件
+7.支持界面保存设置的参数
+8.增加输入输出文件夹一致的提示，并添加文件后缀
+
+20210201
+1. 支持适配fileindex的位数
+2. 修复最小化按钮问题
+3. 修复bmp编解码方向问题
+4. 修复rotate和scale crash问题
+5. 修正RGB和内存对应关系问题（ArcCompareView工具需要更新）
+6. 支持ReferByAsvlOffScreen接口，供其他team使用
+
+20210111
+1. 支持UI界面第一个版本
+2. 支持格式转换
+3. 支持视频参数转换（编码器/framerate/bitrate）
+4. 支持图片编码成视频
+
+20201229
+1. 支持YUV(NV21/NV12/I420/YV12/YUYV/I444/I422H/I422V/ARGB32/RGBA32/BGRA32/RGB24/BGR24/R5G6B5) 格式转换/旋转/缩放/镜像/Mirror/Crop
+2. 支持PNG/JPG格式转换
+3. 支持Raw2RGB转换（需metadata）
+4. 支持BMP转换
+5. 支持Depth2RGB转换（需metadata）
+6. 支持视频参数转换（编码器/crf/gopszize/framerate/bitrate）
+7. 支持图片编码成视频
+
+20201205
+1. 支持YUV(NV21/NV12/I420/YV12/YUYV/I444/I422H/I422V/ARGB32/RGBA32/BGRA32/RGB24/BGR24/R5G6B5) 格式转换/旋转/缩放/镜像/Mirror
+2. 支持PNG/JPG格式转换
+3. 支持Raw2RGB转换

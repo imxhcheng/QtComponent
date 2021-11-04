@@ -1,0 +1,14 @@
+[settings]
+appname=ArcSoft Converter
+imagefilter=*.jpg *.png *.bmp *.nv21 *.nv12 *.i420 *.yv12 *.yuyv *.i444 *.i422h *.i422v *.rgba32 *.bgra32 *.argb32 *.bgr24 *.rgb24 *.R5G6B5 *.B5G6R5 *.gray *.GRAY16 *.p010_lsb *.p010_msb 
+videofilter=*.mp4 *.avi *.mov *.mpg *.wmv
+formats=.nv21 .jpg .bmp .png .nv12 .i420 .yv12 .yuyv .i444 .rgba32 .bgra32 .argb32 .bgr24 .rgb24 .gray8 .p010_lsb .p010_msb .R5G6B5
+rotate=0 90 180 270
+scale=0.5 1.0 1.5 2.0 2.5 3.0
+mirror=NO Horizontal Vertical
+codeid=AUTO H.264 H.265
+fps=AUTO 15 24 30 60 120
+bitrate=AUTO
+
+[AISFConverter]
+RGBColorSpace=JPG      ;The value can be JPG,BT601,BT709 and BT2020

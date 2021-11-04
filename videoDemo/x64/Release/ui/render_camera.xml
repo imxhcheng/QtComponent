@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SimpleLayout>
+	<ImageView
+		id="img_view"
+		grid_row="0"
+		grid_col="0"
+		layout_left="0"
+		layout_top="0"
+		layout_width="match_parent"
+		layout_height="match_parent"
+		z_order="0"
+		visibility="1"
+		alpha_blend="1"
+		enable_touch="1"
+		scale_type="0"
+		font="DroidSans_en.ttf"
+		fontsize="64"
+		textureblock="0"
+		backgroundcolor="#333333FF"
+	/>
+
+
+</SimpleLayout>
