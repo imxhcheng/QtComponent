@@ -16,6 +16,7 @@
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">10.0.19041.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0.19041.0</WindowsTargetPlatformVersion>
     <QtMsBuild Condition="'$(QtMsBuild)'=='' OR !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
+    <ProjectName>EncrptionImgTest</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -55,14 +56,21 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <IncludePath>F:\git\QtProject\QtComponent\opensslTestForImg\Lib\Lib_ImgEncrypted\include;$(IncludePath)</IncludePath>
+    <LibraryPath>F:\git\QtProject\QtComponent\opensslTestForImg\Lib\Lib_ImgEncrypted\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <IncludePath>..\Lib\Lib_openssl\include;..\Lib\Lib_opencv\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\Lib\Lib_openssl\lib;..\Lib\lib_opencv\x64\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\Lib\Lib_ImgEncrypted\include;..\Lib\Lib_opencv\include;..\Lib\Lib_openssl\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\Lib\Lib_ImgEncrypted\lib;..\Lib\lib_opencv\x64\lib;..\Lib\Lib_openssl\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Link>
-      <AdditionalDependencies>libcrypto.lib;opencv_core3413.lib;opencv_imgcodecs3413.lib;opencv_highgui3413.lib;opencv_imgproc3413.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ImgEncrption_DLL.lib;libcrypto.lib;opencv_core3413.lib;opencv_imgcodecs3413.lib;opencv_highgui3413.lib;opencv_imgproc3413.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Link>
+      <AdditionalDependencies>ImgEncrption_DLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -83,7 +91,7 @@
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -92,7 +100,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="decimagtext.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="mybase64.c" />
   </ItemGroup>
   <ItemGroup>

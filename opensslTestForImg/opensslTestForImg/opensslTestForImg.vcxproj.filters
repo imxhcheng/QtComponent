@@ -19,10 +19,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="decimagtext.cpp">
+    <ClCompile Include="mybase64.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="mybase64.c">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
