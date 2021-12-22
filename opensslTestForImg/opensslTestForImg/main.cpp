@@ -1,4 +1,4 @@
-#include <iostream>
+ï»¿#include <iostream>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -22,7 +22,12 @@
 using namespace std;
 using namespace cv;
 
-#define KEYWORD 1314
+#define KEYWORD 1314
+
+#define ENCRYPT_SIZE   131072    //128 * 1024
+#define DNCRYPT_SIZE   349528
+#define MAX_IMAGE_SIZE 3145728  // 3 * 1024 * 1024 
+
 class stop_watch
 {
 public:
@@ -35,7 +40,7 @@ public:
 public:
 	void start()
 	{
-		/// »ñÈ¡¾«È·Ê±¼ä
+		/// è·å–ç²¾ç¡®æ—¶é—´
 		QueryPerformanceCounter(&begin_time_);
 	}
 	void stop()
@@ -49,17 +54,17 @@ public:
 		elapsed_ = 0;
 		start();
 	}
-	//Î¢Ãë
+	//å¾®ç§’
 	double elapsed()
 	{
 		return static_cast<double>(elapsed_);
 	}
-	//ºÁÃë
+	//æ¯«ç§’
 	double elapsed_ms()
 	{
 		return elapsed_ / 1000.0;
 	}
-	//Ãë
+	//ç§’
 	double elapsed_second()
 	{
 		return elapsed_ / 1000000.0;
@@ -74,7 +79,7 @@ private:
 
 std::string base64Decode(const char* Data, int DataByte) 
 {
-	//½âÂë±í
+	//è§£ç è¡¨
 	const char DecodeTable[] =
 	{
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -119,9 +124,9 @@ std::string base64Decode(const char* Data, int DataByte)
 
 std::string base64Encode(const unsigned char* Data, int DataByte) 
 {
-	//±àÂë±í
+	//ç¼–ç è¡¨
 	const char EncodeTable[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-	//·µ»ØÖµ
+	//è¿”å›å€¼
 	std::string strEncode;
 	unsigned char Tmp[4] = { 0 };
 	int LineLength = 0;
@@ -135,7 +140,7 @@ std::string base64Encode(const unsigned char* Data, int DataByte)
 		strEncode += EncodeTable[Tmp[3] & 0x3F];
 		if (LineLength += 4, LineLength == 76) { strEncode += "\r\n"; LineLength = 0; }
 	}
-	//¶ÔÊ£ÓàÊı¾İ½øĞĞ±àÂë
+	//å¯¹å‰©ä½™æ•°æ®è¿›è¡Œç¼–ç 
 	int Mod = DataByte % 3;
 	if (Mod == 1) {
 		Tmp[1] = *Data++;
@@ -156,10 +161,10 @@ std::string base64Encode(const unsigned char* Data, int DataByte)
 	return strEncode;
 }
 
-//imgType °üÀ¨png bmp jpg jpegµÈopencvÄÜ¹»½øĞĞ±àÂë½âÂëµÄÎÄ¼ş
-std::string Mat2Base64(const cv::Mat &img, std::string imgType) 
+//imgType åŒ…æ‹¬png bmp jpg jpegç­‰opencvèƒ½å¤Ÿè¿›è¡Œç¼–ç è§£ç çš„æ–‡ä»¶
+std::vector<uchar> Mat2Base64(const cv::Mat &img, std::string imgType)
 {
-	//Mat×ªbase64
+	//Matè½¬base64
 	std::string img_data;
 	std::vector<uchar> vecImg;
 	std::vector<int> vecCompression_params;
@@ -168,7 +173,7 @@ std::string Mat2Base64(const cv::Mat &img, std::string imgType)
 	imgType = "." + imgType;
 	cv::imencode(imgType, img, vecImg, vecCompression_params);
 	img_data = base64Encode(vecImg.data(), vecImg.size());
-	return img_data;
+	return vecImg;
 }
 
 
@@ -182,28 +187,42 @@ cv::Mat Base2Mat(std::string &base64_data)
 	return img;
 }
 
+int MatToByteArray(const cv::Mat mat, std::vector<unsigned char>& buff)
+{
+	if (mat.empty())
+	{
+		return -1;
+	}
+	std::vector<int> param = std::vector<int>(2);
+	param[0] = cv::IMWRITE_JPEG_QUALITY;
+	param[1] = 90; // default(95) 0-100
+	cv::imencode(".jpg", mat, buff, param);
+	return 0;
+}
+
+#if 0
 //int main()
 //{
-//	//¼ÓÃÜ²âÊÔ
+//	//åŠ å¯†æµ‹è¯•
 //	FILE* file = fopen("face_3-azurekinect_00000_color.jpg","rb");
 //
 //	if (file != NULL)
 //	{
 //
 //#if 1
-//		//¼ÓÃÜ
-//		//´ò¿ªÎÄ¼ş
+//		//åŠ å¯†
+//		//æ‰“å¼€æ–‡ä»¶
 //		fseek(file,0,SEEK_END);
 //		long filelen = ftell(file);
 //		byte* imgBuff = new byte[filelen + 1];
 //		memset(imgBuff, 0x00, filelen + 1);
 //
-//		//¶ÁÈ¡ÎÄ¼ş
+//		//è¯»å–æ–‡ä»¶
 //		rewind(file);
 //		fread(imgBuff,filelen,1,file);
 //		fclose(file);
 //
-//		//×ªÎªbase64
+//		//è½¬ä¸ºbase64
 //		stop_watch timer;
 //		char *pOutBuf = new char[filelen * 2];
 //		memset(pOutBuf, 0x00, filelen * 2);
@@ -212,7 +231,7 @@ cv::Mat Base2Mat(std::string &base64_data)
 //
 //		delete[]imgBuff;
 //		imgBuff = NULL;
-//		//¼ÓÃÜ
+//		//åŠ å¯†
 //		//string strimg = shiftEncrypt(pOutBuf,KEYWORD);
 //
 //		char* pDst = new char[nBase64*2];
@@ -229,18 +248,18 @@ cv::Mat Base2Mat(std::string &base64_data)
 //		pOutBuf = NULL;
 //#endif
 //#if 1
-//		//½âÃÜ
+//		//è§£å¯†
 //		//FILE* filemiwen = fopen("img.data", "rb");
 //		FILE* filemiwen = fopen("img_face.data", "rb");
 //		if (filemiwen)
 //		{
-//			//´ò¿ªÎÄ¼ş
+//			//æ‰“å¼€æ–‡ä»¶
 //			fseek(filemiwen, 0, SEEK_END);
 //			long filelenmiwen = ftell(filemiwen);
 //			char* imgBuff2 = new char[filelenmiwen + 1];
 //			memset(imgBuff2, 0x00, filelenmiwen + 1);
 //
-//			//¶ÁÈ¡ÎÄ¼ş
+//			//è¯»å–æ–‡ä»¶
 //			rewind(filemiwen);
 //			fread(imgBuff2, filelenmiwen, 1, filemiwen);
 //			fclose(filemiwen);
@@ -287,13 +306,32 @@ cv::Mat Base2Mat(std::string &base64_data)
 //}
 
 
-//Mat²âÊÔ
+//std::string Mat2Base64(const cv::Mat & img, std::string imgType)
+//{
+//	//Mat×ªbase64
+//	std::string img_data;
+//	std::vector<uchar> vecImg;
+//	std::vector<int> vecCompression_params;
+//	vecCompression_params.push_back(cv::IMWRITE_JPEG_QUALITY);
+//	vecCompression_params.push_back(90);
+//	imgType = "." + imgType;
+//	cv::imencode(imgType, img, vecImg, vecCompression_params);
+//	img_data = base64Encode(vecImg.data(), vecImg.size());
+//	return img_data;
+//}
+
+#endif
+//Matæµ‹è¯•
 int main()
 {
-	//¼ÓÃÜ²âÊÔ
+	int encryptLen = 128 * 1024;
+	int decryptLen = 349528;
+	int remainlen = 0;
+
+	//åŠ å¯†æµ‹è¯•
 	stop_watch timer;
 
-	cv::Mat matSrc = imread("img_test.jpg");
+	cv::Mat matSrc = imread("img.jpg");
 
 	if (matSrc.empty())
 	{
@@ -303,71 +341,90 @@ int main()
 	{
 
 #if 1
-		//¼ÓÃÜ
-		//×ªÎªbase64
+		//åŠ å¯†
+		//Matè½¬bin
 		timer.start();
 
-		int channelNum = matSrc.channels();
+		std::vector<unsigned char> vImg;
 
-		char* base64Out = new char[matSrc.rows*matSrc.cols*matSrc.channels()];
+		MatToByteArray(matSrc, vImg);
 
-		//int nLen = base64_encode(base64Out,matSrc.data, matSrc.rows*matSrc.cols * matSrc.channels(), matSrc.rows*matSrc.cols*matSrc.channels());
 
-		std::string strBase64 = base64Decode((const char*)matSrc.data,matSrc.rows*matSrc.cols);
 
-		int nDstNum = 0;
-		timer.stop();
+		char* pimg = new char[vImg.size() + 1];
+		memset(pimg,0x00, vImg.size() + 1);
 
-		std::string strEncrpted = shiftEncrypt(strBase64, KEYWORD);
+		for (int i=0;i< vImg.size();i++)
+		{
+			pimg[i] = vImg[i];
+		}
 
-		FILE* fileOut = fopen("img_face.data", "wb+");
+		FILE* fileMat = fopen("imgMat.jpg", "wb+");
+		fwrite(pimg,vImg.size(),1,fileMat);
+		fclose(fileMat);
 
-		fwrite(strEncrpted.c_str(), strEncrpted.length(), 1, fileOut);
-		fclose(fileOut);
-		cout << timer.elapsed_ms();
+		//
+		if (vImg.size() > ENCRYPT_SIZE)
+		{
+			//è½¬ä¸ºbase64
+			stop_watch timer;
+			char *pOutBuf = new char[vImg.size() * 2];
+			memset(pOutBuf, 0x00, vImg.size() * 2);
+			timer.start();
+			base64_encode(pOutBuf, (const unsigned char*)pimg, ENCRYPT_SIZE, 0);
+
+			//åŠ å¯†
+			string strimg = shiftEncrypt(pOutBuf, KEYWORD);
+			timer.stop();
+			cout << timer.elapsed_ms();
+			FILE* fileOut = fopen("img.data", "wb+");
+			fwrite(strimg.c_str(), strimg.length(), 1, fileOut);
+			fwrite(pimg+ ENCRYPT_SIZE, vImg.size() - ENCRYPT_SIZE, 1, fileOut);
+			fclose(fileOut);
+			delete[] pOutBuf;
+			pOutBuf = NULL;
+		}
+
 #endif
-#if 0
-		//½âÃÜ
-		//FILE* filemiwen = fopen("img.data", "rb");
-		FILE* filemiwen = fopen("img_face.data", "rb");
+#if 1
+		//è§£å¯†
+		FILE* filemiwen = fopen("img.data", "rb");
 		if (filemiwen)
 		{
-			//´ò¿ªÎÄ¼ş
+			//æ‰“å¼€æ–‡ä»¶
 			fseek(filemiwen, 0, SEEK_END);
 			long filelenmiwen = ftell(filemiwen);
+			/*if (filelenmiwen > encryptLen)
+				filelenmiwen = encryptLen;*/
+			remainlen = filelenmiwen - decryptLen;
 			char* imgBuff2 = new char[filelenmiwen + 1];
 			memset(imgBuff2, 0x00, filelenmiwen + 1);
 
-			//¶ÁÈ¡ÎÄ¼ş
+			//è¯»å–æ–‡ä»¶
 			rewind(filemiwen);
 			fread(imgBuff2, filelenmiwen, 1, filemiwen);
 			fclose(filemiwen);
+
+			char* remainBuff = new char[remainlen + 1];
+			memset(remainBuff, 0x00, remainlen + 1);
+
+			memcpy(remainBuff,imgBuff2+ decryptLen, remainlen);
 
 			stop_watch timer1;
 
 			timer1.start();
 			string strImgSrc = shiftDecrypt(imgBuff2, KEYWORD);
-
-			//char* pDst = new char[filelenmiwen * 2];
-			//int nDstNum = 0;
-
-			//bool bRet = shiftDecrypt2(imgBuff2, filelenmiwen, pDst, nDstNum, KEYWORD);
-
-			cv::Mat mv = Base2Mat(strImgSrc);
-
-			imwrite("123.jpg",mv);
-
+			unsigned char* pChar = (unsigned char*)strImgSrc.c_str();
+			unsigned char *pdecBuf = new unsigned char[strImgSrc.length() + 1];
+			int nimgNum = base64_decode(pdecBuf, pChar, strImgSrc.length(), 0);
 			timer1.stop();
 			cout << timer1.elapsed_ms();
-			//QImage im;
-			//im.loadFromData(pdecBuf, nimgNum);
 
-			//if (!im.isNull())
-			//{
-			//	cout << "Done!";
-			//}
-			//cout << im.height();
-			//cout << im.width();
+			FILE* file = fopen("dec_test.jpg", "wb+");
+			fwrite(pdecBuf, 1, nimgNum, file);
+			fwrite(remainBuff, 1, remainlen, file);
+			fclose(file);
+
 			
 		}
 #endif
