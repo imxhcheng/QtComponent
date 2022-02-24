@@ -331,7 +331,7 @@ int main()
 	//加密测试
 	stop_watch timer;
 
-	cv::Mat matSrc = imread("img.jpg");
+	cv::Mat matSrc = imread("1_res.jpg");
 
 	if (matSrc.empty())
 	{
@@ -349,8 +349,6 @@ int main()
 
 		MatToByteArray(matSrc, vImg);
 
-
-
 		char* pimg = new char[vImg.size() + 1];
 		memset(pimg,0x00, vImg.size() + 1);
 
@@ -359,9 +357,9 @@ int main()
 			pimg[i] = vImg[i];
 		}
 
-		FILE* fileMat = fopen("imgMat.jpg", "wb+");
-		fwrite(pimg,vImg.size(),1,fileMat);
-		fclose(fileMat);
+		//FILE* fileMat = fopen("1_res.jpg", "wb+");
+		//fwrite(pimg,vImg.size(),1,fileMat);
+		//fclose(fileMat);
 
 		//
 		if (vImg.size() > ENCRYPT_SIZE)
@@ -377,7 +375,7 @@ int main()
 			string strimg = shiftEncrypt(pOutBuf, KEYWORD);
 			timer.stop();
 			cout << timer.elapsed_ms();
-			FILE* fileOut = fopen("img.data", "wb+");
+			FILE* fileOut = fopen("1_res.data", "wb+");
 			fwrite(strimg.c_str(), strimg.length(), 1, fileOut);
 			fwrite(pimg+ ENCRYPT_SIZE, vImg.size() - ENCRYPT_SIZE, 1, fileOut);
 			fclose(fileOut);
@@ -388,7 +386,7 @@ int main()
 #endif
 #if 1
 		//解密
-		FILE* filemiwen = fopen("img.data", "rb");
+		FILE* filemiwen = fopen("1_res.data", "rb");
 		if (filemiwen)
 		{
 			//打开文件
@@ -420,7 +418,7 @@ int main()
 			timer1.stop();
 			cout << timer1.elapsed_ms();
 
-			FILE* file = fopen("dec_test.jpg", "wb+");
+			FILE* file = fopen("1_res_test.jpg", "wb+");
 			fwrite(pdecBuf, 1, nimgNum, file);
 			fwrite(remainBuff, 1, remainlen, file);
 			fclose(file);
